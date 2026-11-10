@@ -26,6 +26,9 @@ def load_profile(path):
     profile = json.loads(Path(path).read_text())
     if profile.get("schema_version") != 1:
         raise ValueError("Expected profile schema_version=1")
+    missing = [key for key in ("python", "icd") if key not in profile]
+    if missing:
+        raise ValueError(f"Profile is missing required keys: {', '.join(missing)}")
     for key in ("python", "icd"):
         p = Path(profile[key])
         if not p.is_absolute() or not p.is_file():

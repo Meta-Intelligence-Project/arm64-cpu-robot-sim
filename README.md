@@ -12,9 +12,9 @@
 
 | 原始光追（32 spp） | OIDN 降噪后 |
 |---|---|
-| ![raw](examples/kunpeng-raw.png) | ![denoised](examples/kunpeng-denoised.png) |
+| ![raw](docs/images/kunpeng-raw.png) | ![denoised](docs/images/kunpeng-denoised.png) |
 
-目前只在**鲲鹏 920（aarch64，openEuler 24.03）**上验证过，详见 [hardware.md](hardware.md)。
+目前只在**鲲鹏 920（aarch64，openEuler 24.03）**上验证过，详见 [hardware.md](docs/hardware.md)。
 
 ## 依赖
 
@@ -23,7 +23,7 @@
 | 依赖 | 已验证版本 | 说明 |
 |---|---|---|
 | 仿真用 Python 环境 | Python 3.12，NumPy 1.26，Pillow | 需能 `import sapien` |
-| SAPIEN | 3.0.2，自行编译的 CPU 版 | 普通 `pip install sapien` 不行，编译方法见 [docs-setup.md](docs-setup.md) |
+| SAPIEN | 3.0.2，自行编译的 CPU 版 | 普通 `pip install sapien` 不行，编译方法见 [docs/setup.md](docs/setup.md) |
 | Mesa Lavapipe | 26.2.6 | 需支持光追，24.x 不支持 |
 | OIDN（可选） | 2.3.3 | 用于降噪，编译脚本见 `scripts/build_oidn.sh` |
 
@@ -31,7 +31,7 @@
 
 ## 安装
 
-不安装也能直接用 `scripts/` 下的脚本。也可以安装成命令：
+可以安装成命令：
 
 ```bash
 pip install --no-deps .
@@ -67,7 +67,7 @@ sapien-cpu-probe render \
   --output runs/render-001 --denoise
 ```
 
-不装 OIDN 时，去掉 `--oidn-prefix` 和 `--denoise` 即可。没有安装成命令的话，三条命令依次换成 `python scripts/configure.py`、`python scripts/check_env.py`、`python scripts/render_check.py`，参数不变。
+不装 OIDN 时，去掉 `--oidn-prefix` 和 `--denoise` 即可。不安装的话，在仓库根目录用 `python -m sapien_cpu_probe` 代替 `sapien-cpu-probe`，参数不变。
 
 `render` 的常用参数：
 
@@ -106,11 +106,15 @@ stdout 最后一行是与 `result.json` 内容相同的 JSON。退出码：`0` �
 
 ## 文档
 
-- [docs-setup.md](docs-setup.md)：在新机器上准备 SAPIEN、Mesa、OIDN
-- [troubleshooting.md](troubleshooting.md)：常见问题，例如 BLAS 构建崩溃、OIDN 报 SIGILL、加载了错误的 LLVM
-- [hardware.md](hardware.md)：已验证的硬件和版本
-- [examples/robotwin-rmbench.md](examples/robotwin-rmbench.md)：接入 RoboTwin / RMBench 时要注意什么
+- [docs/setup.md](docs/setup.md)：在新机器上准备 SAPIEN、Mesa、OIDN
+- [docs/troubleshooting.md](docs/troubleshooting.md)：常见问题，例如 BLAS 构建崩溃、OIDN 报 SIGILL、加载了错误的 LLVM
+- [docs/hardware.md](docs/hardware.md)：已验证的硬件和版本
+- [docs/robotwin-rmbench.md](docs/robotwin-rmbench.md)：接入 RoboTwin / RMBench 时要注意什么
 - [AGENTS.md](AGENTS.md)：给 code agent 的操作说明
+
+## 许可
+
+`patches/sapien-3.0.2-cpu-build.patch` 修改的是 SAPIEN 源码，SAPIEN 的 Apache-2.0 许可声明见 `patches/SAPIEN-LICENSE`。本仓库不包含 SAPIEN、Mesa、OIDN 等第三方二进制文件，也不包含 RoboTwin / RMBench 的资产；`docs/images/` 中的图片是本工具测试场景的渲染结果。
 
 ## 开发
 

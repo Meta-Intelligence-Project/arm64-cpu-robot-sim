@@ -1,9 +1,0 @@
-{
-  "schema_version": 1,
-  "python": "/path/to/sim-venv/bin/python",
-  "icd": "/path/to/profile/lvp.json",
-  "library_dirs": ["/path/to/mesa-env/lib", "/path/to/oidn-cpu/lib64", "/path/to/sapien-native/lib64"],
-  "oidn_library": "/path/to/oidn-cpu/lib64/libOpenImageDenoise.so",
-  "threads": 4,
-  "vector_width": 256
-}
