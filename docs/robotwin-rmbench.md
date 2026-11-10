@@ -57,11 +57,51 @@ RoboTwin 和 RMBench 原本假定有 NVIDIA GPU，下面几处需要改：
 
 渲染、运动规划、策略推理是三个独立的环节。渲染能在 CPU 上跑通，不代表另外两个也可以。
 
+## RoboTwin 2.0 补丁
+
+[patches/robotwin-2eeec322-cpu.patch](../patches/robotwin-2eeec322-cpu.patch) 是 RoboTwin 2.0 在 commit `2eeec322` 上的 CPU 移植，已经实际跑通。它改了 5 个文件：
+
+| 文件 | 改动 |
+|---|---|
+| `envs/_base_task.py` | 场景改用 CPU PhysX 和 CPU 渲染。光追参数默认沿用官方设置（32 spp，深度 8），内置 denoiser 设为 `none` |
+| `envs/camera/camera.py` | 可选开启 CPU OIDN 降噪；可选跳过策略用不到的相机；去掉顶层的 open3d 导入（aarch64 上缺 libgfortran） |
+| `envs/robot/cpu_planner.py` | 新增，基于 MPlib 的 CPU 规划器，替代 CuRobo |
+| `envs/robot/robot.py` | 两只手臂都改用上面的规划器 |
+| `envs/utils/save_file.py` | 只在保存点云时才导入 open3d |
+
+```bash
+git clone https://github.com/RoboTwin-Platform/RoboTwin.git && cd RoboTwin
+git checkout 2eeec322
+git apply /path/to/sapien-cpu-probe/patches/robotwin-2eeec322-cpu.patch
+```
+
+可以通过下面这些环境变量调整行为：
+
+| 变量 | 默认值 | 说明 |
+|---|---|---|
+| `ROBOTWIN_CPU_SHADER` | `rt` | 相机 shader，`rt` 表示光追 |
+| `ROBOTWIN_CPU_SPP` / `ROBOTWIN_CPU_PATH_DEPTH` | 32 / 8 | 光追采样数和光路深度 |
+| `ROBOTWIN_CPU_OIDN` | `0` | 设为 `1` 开启 CPU OIDN 降噪，库路径用 `ROBOTWIN_CPU_OIDN_LIBRARY` 指定 |
+| `ROBOTWIN_CPU_OIDN_THREADS` | 8 | OIDN 线程数 |
+| `ROBOTWIN_CPU_STATIC_CAMERAS` | 全部渲染 | 只渲染列出的固定相机，例如 `head_camera` |
+
+除了 sapien-cpu-probe 的环境，仿真进程还需要：
+
+- **MPlib 0.2.1**：需要在 ARM 上自行编译，并打上 RMBench 官方的 screw 规划补丁。FCL 0.7 和 OctoMap 1.10 必须配套使用，混入 OctoMap 1.9 会导致进程退出时 heap corruption。
+- **RoboTwin 资产**：从 HuggingFace 下载 `embodiments.zip` 和 `objects.zip`。`demo_clean` 配置用不到 `background_texture.zip`（11 GB），可以不下。
+
+和 GPU 版本相比的差异：
+
+- MPlib 并不是 CuRobo 的逐数值移植。CuRobo 针对 aloha-agilex 的 `frame_bias` 和校准旋转没有加上，规划出的轨迹会有差别。
+- 渲染结果没有和 GPU 版本做过逐像素对比。
+
+用 LingBot-VA 在 NPU 上推理，`click_bell` 和 `beat_block_hammer` 两个任务各跑了 1 个 episode，都成功完成。耗时见 [performance.md](performance.md)。
+
 ## 建议的步骤
 
 1. 先用本工具的 `check` 和 `render` 确认底层环境可用。
 2. 把 benchmark 固定在某个 commit 上，在单独的 checkout 里修改。
-3. 修改上面表格中的几处。
+3. 修改上面表格中的几处；RoboTwin 2.0 可以直接使用上面的补丁。
 4. 对真实任务跑一遍 setup → reset → step，并确认进程能正常退出。
 
-之前做 RMBench CPU 移植时，基于的 commit 是 `7d1cdfc7661c273a7a5c5f6126e2d1a7f0a3f4b7`。那次移植中对规划器和机器人部分的改动没有包含在本仓库里。
+RMBench 的 CPU 移植基于 commit `7d1cdfc7661c273a7a5c5f6126e2d1a7f0a3f4b7`，改法与 RoboTwin 补丁类似，但这份补丁没有收进本仓库。
