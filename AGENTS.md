@@ -28,3 +28,9 @@ python -m unittest discover -s tests -v
 ```
 
 单元测试不依赖 SAPIEN。测试通过不代表原生链路正常；改动后要在真实配置上跑一遍 `render`。
+
+## LIBERO 独立示例
+
+用户明确要求 LIBERO 闭环时，按 [docs/libero.md](docs/libero.md) 使用 `examples/libero/`。上文“不连接 policy server”和“不退回光栅化”针对 SAPIEN probe；LIBERO 本来使用 MuJoCo 软件光栅化，并需要连接策略服务。只启动和连接本次获准使用的独立服务，不碰其他作业。先检查 NPU/端口占用，结束后释放自己的服务。
+
+结果必须同时记录客户端退出码、每个 episode 的 success、权重版本和实际模型工作树。客户端 exit 0 不表示任务成功；单个 episode 成功不表示 benchmark 成功率。不得把 LIBERO 软件光栅化写成 CPU 光追。

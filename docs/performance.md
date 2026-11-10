@@ -55,7 +55,7 @@
 
 ## 对比：LIBERO（MuJoCo）
 
-LIBERO 不使用 SAPIEN，不在本工具的支持范围内，这里只列出数据作为对比。测试条件：
+LIBERO 不使用 SAPIEN。独立复跑入口和环境说明见 [libero.md](libero.md)。下面保留首次测试数据，复跑记录另列在该文档中。测试条件：
 
 - **任务**：LIBERO-Long（libero_10）task 0 用 EGL 渲染，task 1 用 OSMesa 渲染，各跑 1 个 episode。
 - **仿真**：robosuite 1.4 + MuJoCo 2.3.7，在 CPU 上运行。
@@ -71,7 +71,7 @@ LIBERO 不使用 SAPIEN，不在本工具的支持范围内，这里只列出数
 | 结果 | 成功（271 步） | 成功（255 步） |
 | 单个 episode 总耗时 | 496 秒 | 361 秒 |
 | 冷启动 | 40 秒 | 18 秒 |
-| 物理仿真，每步 | 41 ms | 42 ms |
+| 物理 + 观测处理（扣除渲染），每步 | 41 ms | 42 ms |
 | 渲染 2 个相机，每步 | 762 ms | 428 ms |
 | NPU 推理，每次 | 12.0 秒 | 11.8 秒 |
 

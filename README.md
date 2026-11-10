@@ -16,7 +16,7 @@
 
 目前只在**鲲鹏 920（aarch64，openEuler 24.03）**上验证过，详见 [hardware.md](docs/hardware.md)。
 
-在同一套环境上，已经用 LingBot-VA（昇腾 NPU 推理）跑通了 RoboTwin 2.0 的闭环评测。所需补丁见 [docs/robotwin-rmbench.md](docs/robotwin-rmbench.md)，耗时分析见 [docs/performance.md](docs/performance.md)。
+在这台机器上，已经用 LingBot-VA（昇腾 NPU 推理）跑通了 RoboTwin 2.0 和 LIBERO 的闭环评测。LIBERO 使用独立的 MuJoCo + CPU 软件光栅化环境，复跑入口见 [docs/libero.md](docs/libero.md)。所需补丁见 [docs/robotwin-rmbench.md](docs/robotwin-rmbench.md)，耗时分析见 [docs/performance.md](docs/performance.md)。
 
 ![RoboTwin beat_block_hammer](docs/images/robotwin-beat_block_hammer.png)
 
@@ -115,11 +115,12 @@ stdout 最后一行是与 `result.json` 内容相同的 JSON。退出码：`0` �
 - [docs/hardware.md](docs/hardware.md)：已验证的硬件和版本
 - [docs/performance.md](docs/performance.md)：RoboTwin 闭环评测的耗时分析，以及如何提高吞吐
 - [docs/robotwin-rmbench.md](docs/robotwin-rmbench.md)：接入 RoboTwin / RMBench，含 RoboTwin 2.0 的 CPU 补丁
+- [docs/libero.md](docs/libero.md)：LIBERO 环境、单卡 NPU 服务、客户端脚本及闭环结果
 - [AGENTS.md](AGENTS.md)：给 code agent 的操作说明
 
 ## 许可
 
-`patches/sapien-3.0.2-cpu-build.patch` 修改的是 SAPIEN 源码，SAPIEN 的 Apache-2.0 许可声明见 `patches/SAPIEN-LICENSE`。`patches/robotwin-2eeec322-cpu.patch` 修改的是 [RoboTwin](https://github.com/RoboTwin-Platform/RoboTwin) 源码，RoboTwin 采用 MIT 许可。本仓库不包含 SAPIEN、Mesa、OIDN 等第三方二进制文件，也不包含 RoboTwin / RMBench 的资产。`docs/images/` 中的图片是本工具测试场景和 RoboTwin、LIBERO 闭环评测的渲染结果。
+`patches/sapien-3.0.2-cpu-build.patch` 修改的是 SAPIEN 源码，SAPIEN 的 Apache-2.0 许可声明见 `patches/SAPIEN-LICENSE`。`patches/robotwin-2eeec322-cpu.patch` 修改的是 [RoboTwin](https://github.com/RoboTwin-Platform/RoboTwin) 源码，RoboTwin 采用 MIT 许可。`examples/libero/client.py` 改编自 Apache-2.0 许可的 LingBot-VA，许可和改动说明见 [examples/libero/README.md](examples/libero/README.md)。本仓库不包含 SAPIEN、Mesa、OIDN 等第三方二进制文件，也不包含 RoboTwin / RMBench 的资产。`docs/images/` 中的图片是本工具测试场景和 RoboTwin、LIBERO 闭环评测的渲染结果。
 
 ## 开发
 

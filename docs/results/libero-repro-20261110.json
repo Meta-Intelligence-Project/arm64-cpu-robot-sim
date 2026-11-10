@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "process_total_s": 827.314214796992,
+    "import_libero_robosuite_s": 4.878593528002966,
+    "ws_connect_s": 20.02443372498965,
+    "MUJOCO_GL": "osmesa",
+    "PYOPENGL_PLATFORM": "osmesa",
+    "OMP_NUM_THREADS": "16",
+    "cpu_affinity_count": 16,
+    "resolution": [
+      128,
+      128
+    ],
+    "cameras": [
+      "agentview",
+      "robot0_eye_in_hand"
+    ],
+    "benchmark": "libero_10",
+    "tasks": [
+      0,
+      1
+    ],
+    "episodes_per_task": 1,
+    "max_steps": 800
+  },
+  "episodes": [
+    {
+      "task_idx": 0,
+      "episode_idx": 0,
+      "prompt": "put both the alphabet soup and the tomato sauce in the basket",
+      "env_construct_s": 7.7613696289481595,
+      "env_reset_and_init_s": 10.478637995023746,
+      "env_cold_start_s": 18.240007623971906,
+      "success": true,
+      "env_timestep_final": 288,
+      "policy_steps": 283,
+      "init_zero_steps": 5,
+      "action_chunks": 18,
+      "action_chunk_shape": [
+        7,
+        4,
+        4
+      ],
+      "env_close_s": 0.20199123601196334,
+      "episode_total_s": 409.0284495750093,
+      "timing": {
+        "env_step_total_incl_render": {
+          "n": 288,
+          "mean_s": 0.47738815763235226,
+          "median_s": 0.4769605244800914,
+          "p90_s": 0.4953800743096508,
+          "min_s": 0.44365111499791965,
+          "max_s": 0.5262944010319188,
+          "sum_s": 137.48778939811746
+        },
+        "env_step_physics_and_obs_excl_render": {
+          "n": 288,
+          "mean_s": 0.04325324653493428,
+          "median_s": 0.04337485847645439,
+          "p90_s": 0.050086601154180246,
+          "min_s": 0.03509211493656039,
+          "max_s": 0.10529939708067104,
+          "sum_s": 12.456935002061073
+        },
+        "render_per_step_all_cameras": {
+          "n": 288,
+          "mean_s": 0.434134911097418,
+          "median_s": 0.4354129174898844,
+          "p90_s": 0.4512326459225733,
+          "min_s": 0.40414635301567614,
+          "max_s": 0.47089853504439816,
+          "sum_s": 125.03085439605638
+        },
+        "policy_infer_action_npu_roundtrip": {
+          "n": 18,
+          "mean_s": 13.698647463943214,
+          "median_s": 12.757456130028004,
+          "p90_s": 15.593798677710584,
+          "min_s": 11.463909115002025,
+          "max_s": 22.22053961700294,
+          "sum_s": 246.57565435097786
+        },
+        "policy_kv_cache_update_roundtrip": {
+          "n": 17,
+          "mean_s": 0.4578914653564639,
+          "median_s": 0.4377769340062514,
+          "p90_s": 0.5234347673831508,
+          "min_s": 0.40094068803591654,
+          "max_s": 0.5398518849979155,
+          "sum_s": 7.784154911059886
+        },
+        "policy_reset_roundtrip": {
+          "n": 1,
+          "mean_s": 1.093957636039704,
+          "median_s": 1.093957636039704,
+          "p90_s": 1.093957636039704,
+          "min_s": 1.093957636039704,
+          "max_s": 1.093957636039704,
+          "sum_s": 1.093957636039704
+        }
+      },
+      "breakdown_s": {
+        "sim_steps_total": 137.48778939811746,
+        "policy_total": 255.45376689807745,
+        "other": 16.086893278814387
+      },
+      "video": "libero_10/0_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket/0_True.mp4",
+      "first_last_npy": "libero_10/0_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket/0_first_last_agentview.npy"
+    },
+    {
+      "task_idx": 1,
+      "episode_idx": 0,
+      "prompt": "put both the cream cheese box and the butter in the basket",
+      "env_construct_s": 6.636594632000197,
+      "env_reset_and_init_s": 10.422190662007779,
+      "env_cold_start_s": 17.058785294007976,
+      "success": true,
+      "env_timestep_final": 274,
+      "policy_steps": 269,
+      "init_zero_steps": 5,
+      "action_chunks": 18,
+      "action_chunk_shape": [
+        7,
+        4,
+        4
+      ],
+      "env_close_s": 0.18327056901762262,
+      "episode_total_s": 392.05619757896056,
+      "timing": {
+        "env_step_total_incl_render": {
+          "n": 274,
+          "mean_s": 0.476019008150987,
+          "median_s": 0.473759181011701,
+          "p90_s": 0.5001352452032733,
+          "min_s": 0.4380763109656982,
+          "max_s": 0.515430393978022,
+          "sum_s": 130.42920823337045
+        },
+        "env_step_physics_and_obs_excl_render": {
+          "n": 274,
+          "mean_s": 0.041473406448579615,
+          "median_s": 0.041275581024819985,
+          "p90_s": 0.04477430966799147,
+          "min_s": 0.035714035970158875,
+          "max_s": 0.05224514094879851,
+          "sum_s": 11.363713366910815
+        },
+        "render_per_step_all_cameras": {
+          "n": 274,
+          "mean_s": 0.4345456017024074,
+          "median_s": 0.43210797299980186,
+          "p90_s": 0.45886453392449766,
+          "min_s": 0.4000682160258293,
+          "max_s": 0.4743179449578747,
+          "sum_s": 119.06549486645963
+        },
+        "policy_infer_action_npu_roundtrip": {
+          "n": 18,
+          "mean_s": 13.270653884550686,
+          "median_s": 12.37794485950144,
+          "p90_s": 15.562312963895966,
+          "min_s": 11.85882084601326,
+          "max_s": 15.678990063024685,
+          "sum_s": 238.87176992191235
+        },
+        "policy_kv_cache_update_roundtrip": {
+          "n": 17,
+          "mean_s": 0.4543280081912492,
+          "median_s": 0.42691788903903216,
+          "p90_s": 0.5254780092160217,
+          "min_s": 0.4008846200304106,
+          "max_s": 0.5507592630456202,
+          "sum_s": 7.723576139251236
+        },
+        "policy_reset_roundtrip": {
+          "n": 1,
+          "mean_s": 0.14190200599841774,
+          "median_s": 0.14190200599841774,
+          "p90_s": 0.14190200599841774,
+          "min_s": 0.14190200599841774,
+          "max_s": 0.14190200599841774,
+          "sum_s": 0.14190200599841774
+        }
+      },
+      "breakdown_s": {
+        "sim_steps_total": 130.42920823337045,
+        "policy_total": 246.737248067162,
+        "other": 14.889741278428119
+      },
+      "video": "libero_10/1_put_both_the_cream_cheese_box_and_the_butter_in_the_basket/0_True.mp4",
+      "first_last_npy": "libero_10/1_put_both_the_cream_cheese_box_and_the_butter_in_the_basket/0_first_last_agentview.npy"
+    }
+  ],
+  "client_exit_code": 0,
+  "date": "2026-11-10",
+  "gl": {
+    "vendor": "Mesa",
+    "renderer": "llvmpipe (LLVM 19.1.7, 128 bits)",
+    "version": "4.5 (Compatibility Profile) Mesa 24.3.4"
+  },
+  "provenance": {
+    "lingbot_head": "6334d94f8b786a8b95a2343f4b6b237c64a32a36",
+    "files_sha256": {
+      "wan_va/wan_va_server.py": "5f163fea783866024a823dccaf20a203412cb7b533cfa489075dba83f6f56797",
+      "wan_va/configs/va_libero_cfg.py": "cddcdc3dee6e31c63160efad40ace4717474d2682a6df894ddc4cef0b4954a37",
+      "wan_va/modules/model.py": "62c6440ad4fb2878804f2881d49c5e9107b04da4aa319efdabf7ecd9a89e9e98",
+      "wan_va/distributed/fsdp.py": "c80046559157eea883dc56fa5b825bde87867e36950599d0205dd2462699ae9f",
+      "evaluation/libero/client.py": "63a48baa2cfecd924963b8a8f7e7eda2b367785a7e29ad0a6326f80517c7e004"
+    },
+    "working_tree_clean": false,
+    "checkpoint_revision": "0e89d1e753019988aba484e8da2dc0810e264d9f",
+    "worktree_diff_sha256": "b5142832191e14a4f4b70b79851a1047f11085e3d96d9f1f46f5d96b0ae163be"
+  },
+  "artifact_note": "Video/NPY paths are relative to the local results directory. Large artifacts are not included in this repository."
+}

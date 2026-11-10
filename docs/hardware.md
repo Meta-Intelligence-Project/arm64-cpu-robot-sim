@@ -33,7 +33,11 @@
 - **光追**：Press Button 任务，seed 2，使用原始机器人 mesh 和阴影，320×240、32 spp、深度 8、16 线程。第一帧约 32 秒，之后每帧约 8 秒，OIDN 降噪每帧约 0.2 秒。
 - **光栅化**：10 个 RMBench 任务在 seed 2 下的 expert 检查全部通过。
 
-这两组结果互相独立：10 个任务只验证了光栅化，光追只验证了 Press Button 一个任务。RoboTwin 与 RMBench 使用相同的底层技术栈，但没有单独做过完整验证。
+这两组结果互相独立：10 个任务只验证了光栅化，光追只验证了 Press Button 一个任务。RoboTwin 与 RMBench 使用相同的底层技术栈；RoboTwin 2.0 的两个闭环 episode 见 [performance.md](performance.md)，不代表完整 benchmark 验证。
+
+### LIBERO 的独立环境
+
+同机还验证了 MuJoCo CPU 仿真、Mesa llvmpipe 软件光栅化和 LingBot-VA 单卡 NPU 推理，环境和复跑记录见 [libero.md](libero.md)。该结果不属于 SAPIEN 光追测试。
 
 ## 添加新的硬件记录
 
