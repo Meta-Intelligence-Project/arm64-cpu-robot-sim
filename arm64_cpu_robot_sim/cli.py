@@ -17,7 +17,7 @@ def positive(value):
 
 def build_parser():
     parser = argparse.ArgumentParser(
-        prog="sapien-cpu-probe",
+        prog="arm64-cpu-robot-sim",
         description="SAPIEN CPU physics + Lavapipe ray-tracing checks; JSON result on stdout",
     )
     sub = parser.add_subparsers(dest="operation", required=True)

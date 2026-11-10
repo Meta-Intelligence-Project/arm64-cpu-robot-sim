@@ -4,7 +4,7 @@
 
 ## 测试场景
 
-`sapien-cpu-probe render` 的方块场景，单进程 4 线程：
+`arm64-cpu-robot-sim render` 的方块场景，单进程 4 线程：
 
 | 参数 | 第一帧 | 之后每帧 | OIDN 降噪 |
 |---|---|---|---|

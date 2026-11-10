@@ -18,7 +18,7 @@ Mesa 26 的 Lavapipe 在 ARM 上默认使用 128 位向量宽度，光追会在�
 
 **用的是新 Mesa，却加载了旧 LLVM**
 
-通常是继承了 `LD_PRELOAD`，或者动态库搜索顺序不对。本工具会在子进程里清掉 `LD_PRELOAD`，并把 Mesa 的 `lib` 目录排在最前面。如果在其他启动器里遇到这个问题，可以使用 `sapien_cpu_probe.runtime.environment()` 生成同样的环境。
+通常是继承了 `LD_PRELOAD`，或者动态库搜索顺序不对。本工具会在子进程里清掉 `LD_PRELOAD`，并把 Mesa 的 `lib` 目录排在最前面。如果在其他启动器里遇到这个问题，可以使用 `arm64_cpu_robot_sim.runtime.environment()` 生成同样的环境。
 
 ## 降噪
 

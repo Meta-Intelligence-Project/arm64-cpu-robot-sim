@@ -1,12 +1,12 @@
 # AGENTS.md
 
-本文件写给 code agent，说明如何用 sapien-cpu-probe 判断一台机器能否用纯 CPU 运行 SAPIEN 的物理仿真和光追渲染。人类读者请看 [README.md](README.md)。
+本文件是 arm64-cpu-robot-sim 的 code agent 操作说明。仓库包含 SAPIEN CPU 光追检查、RoboTwin / RMBench 接入经验和 LIBERO CPU 仿真示例。下面的默认流程使用仓库内的 `arm64-cpu-robot-sim` 工具；LIBERO 任务见文末的独立示例。人类读者请看 [README.md](README.md)。
 
 ## 流程
 
 1. 先读 [docs/hardware.md](docs/hardware.md) 和 [docs/troubleshooting.md](docs/troubleshooting.md)。没在 hardware.md 里出现过的硬件，按"未验证"处理。
 2. 找到用户已有的仿真 Python 环境、Mesa 目录和 SAPIEN 原生库目录。路径要问用户，或者在本机实际确认，不要照搬其他机器上的路径。
-3. 运行 `sapien-cpu-probe configure`（未安装时在仓库根目录用 `python -m sapien_cpu_probe configure`）生成配置，输出到一个新目录。缺依赖时，对照 [docs/setup.md](docs/setup.md) 告诉用户具体缺什么。
+3. 运行 `arm64-cpu-robot-sim configure`（未安装时在仓库根目录用 `python -m arm64_cpu_robot_sim configure`）生成配置，输出到一个新目录。缺依赖时，对照 [docs/setup.md](docs/setup.md) 告诉用户具体缺什么。
 4. 先跑 `check`，再跑 `render`，每次用新的输出目录。资源紧张时，可以先用 `--width 160 --height 120 --spp 8`。
 5. 看退出码、`result.json` 和 `worker.log`。只有退出码为 0 才算成功；即使图片已经生成，进程崩溃也算失败。
 6. 打开输出的 PNG，确认画面里有红色、蓝色、银色三个方块，还有地面和阴影。不要只靠图像方差来判断颜色或材质对不对。

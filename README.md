@@ -1,131 +1,54 @@
-# sapien-cpu-probe
+# arm64-cpu-robot-sim
 
-在没有 NVIDIA GPU 的 ARM Linux 机器上，检查 [SAPIEN](https://github.com/haosulab/SAPIEN) 能否用纯 CPU 跑通物理仿真和光线追踪渲染。
+面向 code agent 的 ARM64 机器人 CPU 仿真经验库：环境配置、验证脚本、移植补丁和踩坑记录。
 
-技术栈：
+目前在 **鲲鹏 920 / openEuler 24.03** 上验证。仿真与渲染使用 CPU，闭环示例中的 LingBot-VA 使用昇腾 NPU 推理。以下是两套独立的仿真环境。
 
-- **物理**：SAPIEN 3.0.2 CPU 构建（`PhysxCpuSystem`）
-- **渲染**：Mesa Lavapipe 软件 Vulkan 光追
-- **降噪（可选）**：CPU 版 Open Image Denoise（OIDN）
+## RoboTwin / RMBench
 
-工具会搭一个带下落方块的小场景，渲染几帧，检查结果是否正确，最后输出一份 JSON 报告和渲染图片。在 RoboTwin、RMBench 等基于 SAPIEN 的 benchmark 接入 CPU 环境之前，可以先用它确认底层链路可用。
+**SAPIEN / PhysX + Mesa Lavapipe CPU 光追，可选 CPU OIDN 降噪。**
 
-| 原始光追（32 spp） | OIDN 降噪后 |
-|---|---|
-| ![raw](docs/images/kunpeng-raw.png) | ![denoised](docs/images/kunpeng-denoised.png) |
+RoboTwin 2.0 闭环结果（32 spp、阴影、OIDN）：
 
-目前只在**鲲鹏 920（aarch64，openEuler 24.03）**上验证过，详见 [hardware.md](docs/hardware.md)。
-
-在这台机器上，已经用 LingBot-VA（昇腾 NPU 推理）跑通了 RoboTwin 2.0 和 LIBERO 的闭环评测。LIBERO 使用独立的 MuJoCo + CPU 软件光栅化环境，复跑入口见 [docs/libero.md](docs/libero.md)。所需补丁见 [docs/robotwin-rmbench.md](docs/robotwin-rmbench.md)，耗时分析见 [docs/performance.md](docs/performance.md)。
+| 任务 | 结果 | 动作数 | 耗时 |
+|---|---|---:|---:|
+| click_bell | 成功 | 61 | 595 秒 |
+| beat_block_hammer | 成功 | 108 | 785 秒 |
 
 ![RoboTwin beat_block_hammer](docs/images/robotwin-beat_block_hammer.png)
 
-## 依赖
+RMBench 另验证了 Press Button 光追和 10 个任务的光栅化 expert 检查，见[硬件与验证记录](docs/hardware.md)。
 
-本工具不安装原生依赖，需要事先准备好：
+[环境搭建](docs/setup.md) · [底层检查与渲染脚本](docs/probe.md) · [RoboTwin / RMBench 接入与补丁](docs/robotwin-rmbench.md)
 
-| 依赖 | 已验证版本 | 说明 |
-|---|---|---|
-| 仿真用 Python 环境 | Python 3.12，NumPy 1.26，Pillow | 需能 `import sapien` |
-| SAPIEN | 3.0.2，自行编译的 CPU 版 | 普通 `pip install sapien` 不行，编译方法见 [docs/setup.md](docs/setup.md) |
-| Mesa Lavapipe | 26.2.6 | 需支持光追，24.x 不支持 |
-| OIDN（可选） | 2.3.3 | 用于降噪，编译脚本见 `scripts/build_oidn.sh` |
+## LIBERO
 
-运行本工具的 Python 只需要标准库（3.10+），可以和仿真用的 Python 不是同一个环境。
+**MuJoCo / robosuite + Mesa llvmpipe CPU 软件光栅化（OSMesa / EGL）。**
 
-## 安装
+LIBERO-Long 闭环结果（OSMesa，双相机 128×128）：
 
-可以安装成命令：
+| 任务 | 结果 | 动作数 | 耗时 |
+|---|---|---:|---:|
+| task 0：汤罐和番茄酱入篮 | 成功 | 283 | 409 秒 |
+| task 1：奶油奶酪盒和黄油入篮 | 成功 | 269 | 392 秒 |
+
+下图依次为 task 0、task 1，左侧初始观测，右侧结束观测。
+
+![LIBERO task 0](docs/images/libero-repro-task0.png)
+
+![LIBERO task 1](docs/images/libero-repro-task1.png)
+
+[环境与复跑步骤](docs/libero.md) · [客户端与策略服务脚本](examples/libero/) · [实测 JSON](docs/results/libero-repro-20261110.json)
+
+以上闭环任务各运行 1 个 episode，仅验证跑通，不代表 benchmark 成功率。
+
+## 使用与文档
+
+SAPIEN 检查工具可在仓库根目录安装；LIBERO 使用上面的独立脚本。
 
 ```bash
 pip install --no-deps .
-sapien-cpu-probe --help
+arm64-cpu-robot-sim --help
 ```
 
-## 使用
-
-**1. 生成配置。** 告诉工具各个依赖装在哪里。结果写入一个新目录，不会修改系统或现有环境。
-
-```bash
-sapien-cpu-probe configure \
-  --python /path/to/sim-venv/bin/python \
-  --mesa-prefix /path/to/mesa-env \
-  --library-dir /path/to/sapien-native/lib64 \
-  --oidn-prefix /path/to/oidn-cpu \
-  --output .local/my-machine
-```
-
-**2. 检查环境。** 确认能找到支持光追的软件 Vulkan 设备。
-
-```bash
-sapien-cpu-probe check \
-  --profile .local/my-machine/profile.json \
-  --output runs/check-001
-```
-
-**3. 渲染测试。** 实际跑物理和光追，并保存图片。
-
-```bash
-sapien-cpu-probe render \
-  --profile .local/my-machine/profile.json \
-  --output runs/render-001 --denoise
-```
-
-不装 OIDN 时，去掉 `--oidn-prefix` 和 `--denoise` 即可。不安装的话，在仓库根目录用 `python -m sapien_cpu_probe` 代替 `sapien-cpu-probe`，参数不变。
-
-`render` 的常用参数：
-
-| 参数 | 默认值 | 说明 |
-|---|---|---|
-| `--width` / `--height` | 320 / 240 | 分辨率 |
-| `--spp` | 8 | 每像素采样数 |
-| `--depth` | 8 | 光路深度 |
-| `--frames` | 3 | 帧数，每帧之间步进 15 次物理 |
-| `--timeout` | 180 | 超时秒数。第一帧要编译 shader，在鲲鹏上大约 35 秒 |
-
-## 检查内容
-
-- 使用 CPU 渲染和 CPU 物理，不会悄悄退回 GPU 或光栅化。
-- 渲染出的图像尺寸正确、没有 NaN、不是空白图。
-- 动态方块确实在重力下下落了。
-- 子进程正常退出。退出时崩溃同样算失败，因为这类问题在 ARM 上踩到过。
-- 启用 `--denoise` 时，还会实际执行一次 OIDN 降噪。
-
-自动检查只能发现明显的错误。颜色、材质、阴影是否正确，仍需打开输出的图片看一眼。
-
-## 输出
-
-每次运行使用一个新的输出目录，已存在的目录会直接报错，不会被覆盖。
-
-```
-runs/render-001/
-├── result.json        # 完整结果
-├── worker.log         # 子进程日志，包含原生库的原始输出
-├── frame-000.png ...  # 每帧渲染图
-├── buffers.npz        # 最后一帧的 Color / HDR / Albedo / Normal
-└── denoised.png       # 启用 --denoise 时生成
-```
-
-stdout 最后一行是与 `result.json` 内容相同的 JSON。退出码：`0` 通过，`1` 检查失败，`2` 参数或配置错误。
-
-## 文档
-
-- [docs/setup.md](docs/setup.md)：在新机器上准备 SAPIEN、Mesa、OIDN
-- [docs/troubleshooting.md](docs/troubleshooting.md)：常见问题，例如 BLAS 构建崩溃、OIDN 报 SIGILL、加载了错误的 LLVM
-- [docs/hardware.md](docs/hardware.md)：已验证的硬件和版本
-- [docs/performance.md](docs/performance.md)：RoboTwin 闭环评测的耗时分析，以及如何提高吞吐
-- [docs/robotwin-rmbench.md](docs/robotwin-rmbench.md)：接入 RoboTwin / RMBench，含 RoboTwin 2.0 的 CPU 补丁
-- [docs/libero.md](docs/libero.md)：LIBERO 环境、单卡 NPU 服务、客户端脚本及闭环结果
-- [AGENTS.md](AGENTS.md)：给 code agent 的操作说明
-
-## 许可
-
-`patches/sapien-3.0.2-cpu-build.patch` 修改的是 SAPIEN 源码，SAPIEN 的 Apache-2.0 许可声明见 `patches/SAPIEN-LICENSE`。`patches/robotwin-2eeec322-cpu.patch` 修改的是 [RoboTwin](https://github.com/RoboTwin-Platform/RoboTwin) 源码，RoboTwin 采用 MIT 许可。`examples/libero/client.py` 改编自 Apache-2.0 许可的 LingBot-VA，许可和改动说明见 [examples/libero/README.md](examples/libero/README.md)。本仓库不包含 SAPIEN、Mesa、OIDN 等第三方二进制文件，也不包含 RoboTwin / RMBench 的资产。`docs/images/` 中的图片是本工具测试场景和 RoboTwin、LIBERO 闭环评测的渲染结果。
-
-## 开发
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-单元测试不依赖 SAPIEN。改动后仍需在真实环境中跑一遍 `render`。
+[Agent 操作说明](AGENTS.md) · [常见问题](docs/troubleshooting.md) · [性能分析](docs/performance.md) · [许可与来源](docs/licenses.md)

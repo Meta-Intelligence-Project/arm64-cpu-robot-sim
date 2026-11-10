@@ -10,9 +10,9 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from sapien_cpu_probe.cli import main
-from sapien_cpu_probe.configure import configure
-from sapien_cpu_probe.runtime import PACKAGE_DIR, environment, load_profile, run_worker
+from arm64_cpu_robot_sim.cli import main
+from arm64_cpu_robot_sim.configure import configure
+from arm64_cpu_robot_sim.runtime import PACKAGE_DIR, environment, load_profile, run_worker
 
 
 class TempDirTest(unittest.TestCase):
@@ -55,7 +55,7 @@ class RuntimeTests(TempDirTest):
         out = self.root / "run"
         child = MagicMock()
         child.wait.return_value = 1
-        with patch("sapien_cpu_probe.runtime.subprocess.Popen", return_value=child) as popen:
+        with patch("arm64_cpu_robot_sim.runtime.subprocess.Popen", return_value=child) as popen:
             run_worker(self.profile, out, "check", {}, 2)
         path = popen.call_args.kwargs["env"]["PYTHONPATH"]
         self.assertEqual(Path(path), out.resolve() / "pkg")
@@ -66,7 +66,7 @@ class RuntimeTests(TempDirTest):
         # No SAPIEN here (or no Vulkan): the worker must still start and report failure.
         r = run_worker(self.profile, self.root / "run", "check", {}, 60)
         self.assertEqual(r["status"], "failed")
-        self.assertNotIn("No module named 'sapien_cpu_probe'", Path(r["log"]).read_text())
+        self.assertNotIn("No module named 'arm64_cpu_robot_sim'", Path(r["log"]).read_text())
         self.assertTrue((self.root / "run" / "worker-result.json").exists())
 
     def test_completed_result_but_native_exit_crash_is_failure(self):
@@ -78,7 +78,7 @@ class RuntimeTests(TempDirTest):
             child.wait.return_value = -11
             return child
 
-        with patch("sapien_cpu_probe.runtime.subprocess.Popen", side_effect=spawn):
+        with patch("arm64_cpu_robot_sim.runtime.subprocess.Popen", side_effect=spawn):
             r = run_worker(self.profile, out, "render", {}, 2)
         self.assertEqual(r["status"], "failed")
         self.assertEqual(r["signal"], "SIGSEGV")
@@ -87,8 +87,8 @@ class RuntimeTests(TempDirTest):
         child = MagicMock()
         child.pid = 123456
         child.wait.side_effect = [subprocess.TimeoutExpired("test", 1), -15]
-        with patch("sapien_cpu_probe.runtime.subprocess.Popen", return_value=child), \
-                patch("sapien_cpu_probe.runtime.os.killpg") as kill:
+        with patch("arm64_cpu_robot_sim.runtime.subprocess.Popen", return_value=child), \
+                patch("arm64_cpu_robot_sim.runtime.os.killpg") as kill:
             r = run_worker(self.profile, self.root / "run", "check", {}, 1)
         kill.assert_called_once_with(123456, signal.SIGTERM)
         self.assertTrue(r["timed_out"])
@@ -101,7 +101,7 @@ class RuntimeTests(TempDirTest):
     def test_missing_result_is_not_success(self):
         child = MagicMock()
         child.wait.return_value = 0
-        with patch("sapien_cpu_probe.runtime.subprocess.Popen", return_value=child):
+        with patch("arm64_cpu_robot_sim.runtime.subprocess.Popen", return_value=child):
             r = run_worker(self.profile, self.root / "run", "check", {}, 1)
         self.assertEqual(r["status"], "failed")
 

@@ -1,6 +1,6 @@
 # 接入 RoboTwin / RMBench
 
-sapien-cpu-probe 只验证底层的物理和渲染链路，不包含机器人资产、运动规划器或策略模型。本文说明怎样把同一套 CPU 环境用在 RoboTwin 或 RMBench 的任务上。
+arm64-cpu-robot-sim 只验证底层的物理和渲染链路，不包含机器人资产、运动规划器或策略模型。本文说明怎样把同一套 CPU 环境用在 RoboTwin 或 RMBench 的任务上。
 
 ## 场景配置
 
@@ -28,7 +28,7 @@ Vulkan 驱动和动态库路径必须在 `import sapien` **之前**设置好，�
 import subprocess
 from pathlib import Path
 
-from sapien_cpu_probe.runtime import environment, load_profile
+from arm64_cpu_robot_sim.runtime import environment, load_profile
 
 profile = load_profile(".local/my-machine/profile.json")
 output = Path("runs/task-001").resolve()
@@ -51,7 +51,7 @@ RoboTwin 和 RMBench 原本假定有 NVIDIA GPU，下面几处需要改：
 | 环节 | 改法 |
 |---|---|
 | 物理 / 渲染设备 | 换成 `PhysxCpuSystem` 和 `RenderSystem(device="cpu")`。相机、mesh、材质、灯光和采样参数保持不变 |
-| 降噪 | 内置 denoiser 设为 `none`，读回 HDR / Albedo / Normal 后调用 CPU OIDN，参考 `sapien_cpu_probe/oidn.py` |
+| 降噪 | 内置 denoiser 设为 `none`，读回 HDR / Albedo / Normal 后调用 CPU OIDN，参考 `arm64_cpu_robot_sim/oidn.py` |
 | 运动规划 | CuRobo 需要 CUDA。生成 expert 数据时要换成 CPU 规划器，例如 MPlib，并记下规划行为和原来有哪些不同 |
 | 策略推理 | 和渲染无关，需要单独确认能否在 CPU 或 NPU 上运行 |
 
@@ -72,7 +72,7 @@ RoboTwin 和 RMBench 原本假定有 NVIDIA GPU，下面几处需要改：
 ```bash
 git clone https://github.com/RoboTwin-Platform/RoboTwin.git && cd RoboTwin
 git checkout 2eeec322
-git apply /path/to/sapien-cpu-probe/patches/robotwin-2eeec322-cpu.patch
+git apply /path/to/arm64-cpu-robot-sim/patches/robotwin-2eeec322-cpu.patch
 ```
 
 可以通过下面这些环境变量调整行为：
@@ -85,7 +85,7 @@ git apply /path/to/sapien-cpu-probe/patches/robotwin-2eeec322-cpu.patch
 | `ROBOTWIN_CPU_OIDN_THREADS` | 8 | OIDN 线程数 |
 | `ROBOTWIN_CPU_STATIC_CAMERAS` | 全部渲染 | 只渲染列出的固定相机，例如 `head_camera` |
 
-除了 sapien-cpu-probe 的环境，仿真进程还需要：
+除了 arm64-cpu-robot-sim 的环境，仿真进程还需要：
 
 - **MPlib 0.2.1**：需要在 ARM 上自行编译，并打上 RMBench 官方的 screw 规划补丁。FCL 0.7 和 OctoMap 1.10 必须配套使用，混入 OctoMap 1.9 会导致进程退出时 heap corruption。
 - **RoboTwin 资产**：从 HuggingFace 下载 `embodiments.zip` 和 `objects.zip`。`demo_clean` 配置用不到 `background_texture.zip`（11 GB），可以不下。

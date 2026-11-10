@@ -65,7 +65,7 @@ index 46d960d..29c41ce 100644
 +
 +def _cpu_oidn_denoise(camera):
 +    import time
-+    from sapien_cpu_probe.oidn import denoise
++    from arm64_cpu_robot_sim.oidn import denoise
 +    buffers = {k: np.asarray(camera.get_picture(k), dtype=np.float32) for k in ("HdrColor", "Albedo", "Normal")}
 +    start = time.monotonic()
 +    out = denoise(_CPU_OIDN_LIBRARY, buffers, threads=int(os.environ.get("ROBOTWIN_CPU_OIDN_THREADS", "8")))

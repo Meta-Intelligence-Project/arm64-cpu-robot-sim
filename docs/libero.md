@@ -60,7 +60,7 @@ PY
 ```bash
 source /usr/local/Ascend/ascend-toolkit/set_env.sh
 export LINGBOT_REPO=/path/to/lingbot-va-fair
-export PROBE_REPO=/path/to/sapien-cpu-probe
+export PROBE_REPO=/path/to/arm64-cpu-robot-sim
 export NPU_PYTHON=/path/to/npu-env/bin/python
 export LIBERO_WEIGHTS=/path/to/lingbot-va-posttrain-libero-long
 export RUN_DIR=/path/to/new/run
@@ -77,7 +77,7 @@ export NO_PROXY=localhost,127.0.0.1,::1 no_proxy=localhost,127.0.0.1,::1
 等日志出现 `server listening`，再在客户端终端设置路径并运行：
 
 ```bash
-export PROBE_REPO=/path/to/sapien-cpu-probe
+export PROBE_REPO=/path/to/arm64-cpu-robot-sim
 export LINGBOT_REPO=/path/to/lingbot-va-fair
 export SIM_ENV=/path/to/libero-sim
 export MESA_PREFIX=/path/to/osmesa

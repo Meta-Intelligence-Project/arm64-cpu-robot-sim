@@ -1,6 +1,6 @@
 # 环境准备
 
-本文介绍如何在一台新的 ARM 机器上准备 sapien-cpu-probe 需要的原生依赖。`configure` 只负责记录这些依赖的位置，不会安装或编译任何东西。
+本文介绍如何在一台新的 ARM 机器上准备 arm64-cpu-robot-sim 需要的原生依赖。`configure` 只负责记录这些依赖的位置，不会安装或编译任何东西。
 
 下面所有步骤都建议安装到独立目录，不要改动系统库，也不要改动 `/usr/share/vulkan/icd.d`。
 
@@ -19,8 +19,8 @@ PyPI 上的 `sapien` wheel 不能直接在这里使用，需要从源码编译�
 
 ```bash
 cd /path/to/SAPIEN
-git apply --check /path/to/sapien-cpu-probe/patches/sapien-3.0.2-cpu-build.patch
-git apply /path/to/sapien-cpu-probe/patches/sapien-3.0.2-cpu-build.patch
+git apply --check /path/to/arm64-cpu-robot-sim/patches/sapien-3.0.2-cpu-build.patch
+git apply /path/to/arm64-cpu-robot-sim/patches/sapien-3.0.2-cpu-build.patch
 ```
 
 关键编译选项：`SAPIEN_CUDA=OFF`、`SAPIEN_PROFILE=OFF`、`CMAKE_BUILD_TYPE=Release`。
@@ -67,7 +67,7 @@ bash scripts/build_oidn.sh \
 ## 4. 生成配置并验证
 
 ```bash
-sapien-cpu-probe configure \
+arm64-cpu-robot-sim configure \
   --python /path/to/sim-venv/bin/python \
   --mesa-prefix /path/to/mesa-env \
   --library-dir /path/to/sapien-native/lib64 \
