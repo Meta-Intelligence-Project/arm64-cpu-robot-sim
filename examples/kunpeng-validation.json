@@ -1,0 +1,71 @@
+{
+  "status": "passed",
+  "operation": "render",
+  "exit_code": 0,
+  "timed_out": false,
+  "output": "runs/kunpeng-rt32",
+  "log": "runs/kunpeng-rt32/worker.log",
+  "details": {
+    "status": "passed",
+    "architecture": "aarch64",
+    "cpu_model": "Kunpeng-920",
+    "platform": "Linux-5.10.0-136.12.0.86.r1526_92.hce2.aarch64-aarch64-with-glibc2.38",
+    "python": "3.12.0",
+    "versions": {
+      "sapien": "3.0.2",
+      "numpy": "1.26.4",
+      "Pillow": "12.3.0"
+    },
+    "device_summary": "GPU: llvmpipe (LLVM 23.1.4, 256 bits)\n  Supported: 1\n  Present:   0\n  cudaId:    -1\n  rayTrace:  1\n  cudaMode   -1\n",
+    "software_vulkan": true,
+    "ray_tracing_advertised": true,
+    "vector_width": "256",
+    "threads": 4,
+    "oidn_library": "$OIDN_PREFIX/lib64/libOpenImageDenoise.so",
+    "note": "Actual CPU physics, RT readback and cleanup executed; parent verifies process exit",
+    "render": {
+      "shader": "rt",
+      "physics": "PhysxCpuSystem",
+      "renderer_device": "cpu",
+      "spp": 32,
+      "path_depth": 8,
+      "resolution": [
+        320,
+        240
+      ],
+      "physics_steps": 45,
+      "initial_cube_position": [
+        0.0,
+        -0.18000000715255737,
+        0.5
+      ],
+      "final_cube_position": [
+        0.0,
+        -0.18000000715255737,
+        0.33754637837409973
+      ],
+      "frame_seconds": [
+        36.34328456397634,
+        2.494853839976713,
+        2.602649498032406
+      ],
+      "images": [
+        "runs/kunpeng-rt32/frame-000.png",
+        "runs/kunpeng-rt32/frame-001.png",
+        "runs/kunpeng-rt32/frame-002.png"
+      ],
+      "buffer_file": "runs/kunpeng-rt32/buffers.npz",
+      "denoiser": "OIDN CPU, RT HDR filter, separate readback pass",
+      "image_std": 0.16354967653751373,
+      "denoise_seconds": 0.4002628320013173,
+      "tonemap_max_error": 1.7881393432617188e-07,
+      "denoised_image": "runs/kunpeng-rt32/denoised.png"
+    }
+  },
+  "recorded_date": "2026-11-10",
+  "path_note": "Local installation paths redacted; runs/ files are local and not distributed.",
+  "shared_images": [
+    "examples/kunpeng-raw.png",
+    "examples/kunpeng-denoised.png"
+  ]
+}

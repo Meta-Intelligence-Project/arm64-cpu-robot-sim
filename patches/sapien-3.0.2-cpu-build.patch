@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4c73389..0c1e9c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
+-if (APPLE)
++if (APPLE OR NOT SAPIEN_CUDA)
+     project(sapien LANGUAGES C CXX)
+ else()
+     project(sapien LANGUAGES C CXX CUDA)
+diff --git a/src/physx/physx_engine.cpp b/src/physx/physx_engine.cpp
+index 9930bd2..0b3c07c 100644
+--- a/src/physx/physx_engine.cpp
++++ b/src/physx/physx_engine.cpp
+@@ -101,7 +101,7 @@ PhysxEngine::PhysxEngine(float toleranceLength, float toleranceSpeed) {
+   if (!PhysxDefault::GetGPUEnabled()) {
+     throw std::runtime_error("Using CUDA is not allowed when PhysX GPU is not enabled.");
+   }
+-#if PX_SUPPORT_GPU_PHYSX
++#if PX_SUPPORT_GPU_PHYSX && defined(SAPIEN_CUDA)
+   if (mCudaContextManagers.contains(cudaId)) {
+     return mCudaContextManagers.at(cudaId);
+   }
